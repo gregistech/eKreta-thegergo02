@@ -6,6 +6,7 @@ const Lang = imports.lang;
 const Settings = imports.ui.settings;
 
 const API_LINK_INST = "https://kretaglobalmobileapi.ekreta.hu/api/v1/Institute";
+const UUID = "eKreta@thegergo02";
 
 var httpSession = new Soup.SessionAsync();
 
@@ -20,7 +21,7 @@ eKretaDesklet.prototype = {
 
     _init(metadata, desklet_id) {
         Desklet.Desklet.prototype._init.call(this, metadata, desklet_id);
-
+        global.log(UUID + ": Desklet started.");
         this.setHeader('eKreta');
 
         this.settings = new Settings.DeskletSettings(this, this.metadata.uuid, desklet_id);
@@ -28,6 +29,7 @@ eKretaDesklet.prototype = {
         this.settings.bind("usr", "usrN");
         this.settings.bind("pass", "passW");
 
+        global.log(UUID + ": started getAuthToken(x,y,z).");
         this.getAuthToken(this.instID, this.usrN, this.passW);
     },
 
@@ -47,9 +49,12 @@ eKretaDesklet.prototype = {
         }
         
         this.setContent(this.window);
+        global.log(UUID + ": UI now ready in setupUI(x).");
+        global.log(UUID + ": Desklet loaded successfully.");
     },
 
     getStudentDetails(instID,authToken) {
+        global.log(UUID + ": Setting up a GET request in getStudentDetails(x,y).");
         var message = Soup.Message.new(
             "GET",
             "https://" + instID + ".e-kreta.hu/mapi/api/v1/Student"
@@ -59,12 +64,14 @@ eKretaDesklet.prototype = {
         httpSession.queue_message(message,
             Lang.bind(this, function(session, response) {
                 if (response.status_code !== Soup.KnownStatusCode.OK) {
-                    global.log("Error during download getStudentDetails(): response code " +
+                    global.log(UUID + ": Error during download in getStudentDetails(): response code " +
                         response.status_code + ": " + response.reason_phrase + " - " +
                         response.response_body.data);
                     return;
                 }
                 var result = JSON.parse(message.response_body.data);
+                global.log(UUID + ": Got correct response in getStudentDetails(x,y).");
+                global.log(UUID + ": Starting setupUI(x).");
                 this.setupUI(result);
                 return;
             })
@@ -72,6 +79,7 @@ eKretaDesklet.prototype = {
     },
 
     getAuthToken(instID, usrN, passW) {
+        global.log(UUID + ": Setting up a POST request in getAuthToken(x,y,z).");
         var message = Soup.Message.new(
             "POST",
             "https://" + instID + ".e-kreta.hu/idp/api/v1/Token"
@@ -83,12 +91,14 @@ eKretaDesklet.prototype = {
         httpSession.queue_message(message,
             Lang.bind(this, function(session, response) {
                 if (response.status_code !== Soup.KnownStatusCode.OK) {
-                    global.log("Error during download getAuthToken(): response code " +
+                    global.log(UUID + ": Error during download in getAuthToken(): response code " +
                         response.status_code + ": " + response.reason_phrase + " - " +
                         response.response_body.data);
                     return;
                 }
                 var result = JSON.parse(message.response_body.data);
+                global.log(UUID + ": Got correct response in getAuthToken(x,y,z).");
+                global.log(UUID + ": Starting getStudentDetails(x,y).");
                 this.getStudentDetails(instID,result["access_token"]);
                 return;
             })
@@ -115,6 +125,15 @@ eKretaDesklet.prototype = {
                 return;
             })
         );
+    },
+
+    on_settings_changed() {
+        this.settings = new Settings.DeskletSettings(this, this.metadata.uuid, desklet_id);
+        this.settings.bind("inst_id", "instID");
+        this.settings.bind("usr", "usrN");
+        this.settings.bind("pass", "passW");
+
+        this.getAuthToken(this.instID, this.usrN, this.passW);
     }
 }
 
