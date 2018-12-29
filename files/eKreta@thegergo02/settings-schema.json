@@ -51,6 +51,13 @@
         "tooltip" : "Show class averages next to your averages."
     },
 
+    "show_grade_diff": {
+        "type" : "checkbox",
+        "default" : false,
+        "description" : "Show grade difference",
+        "tooltip" : "Show the difference between your avereages, and your class's averages (You have to turn on class averages)."
+    },
+
     "perfect_grade_value": {
         "type": "entry",
         "default": "5",
