@@ -4,6 +4,11 @@
         "description" : "Settings for eKreta desklet."
     },
 
+    "disclaimer": {
+        "type" : "header",
+        "description" : "You need to reload the desklet for the changes to apply."
+    },
+
     "inst_id": {
         "type": "entry",
         "default": "klik",
@@ -23,6 +28,13 @@
         "default": "",
         "description": "Your password for the eKreta system.",
         "tooltip": "You need this to fetch data from the eKreta system."
+    },
+
+    "delay_minutes": {
+        "type": "entry",
+        "default": "5",
+        "description": "Data update time interval.",
+        "tooltip": "The time to wait till' the next data update. (In minutes)."
     },
 
     "head1": {
