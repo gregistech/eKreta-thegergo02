@@ -1,6 +1,6 @@
 # eKreta@thegergo02
 
-![The english version is here](README_hu.md)
+![The english version is here](README.md)
 
 ## Funkciók
 * Automatikus adat lekérés
