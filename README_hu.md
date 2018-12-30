@@ -1,5 +1,7 @@
 # eKreta@thegergo02
 
+![The english version is here](README_hu.md)
+
 ## Funkciók
 * Automatikus adat lekérés
 * Tantárgy átlagok kijelzése
