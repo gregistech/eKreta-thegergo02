@@ -1,4 +1,5 @@
 # eKreta@thegergo02
+![A magyar verzió itt van](https://github.com/thegergo02/eKreta-thegergo02/README_hu.md)
 
 ## Features
 * Automated data reload
