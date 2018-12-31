@@ -34,14 +34,14 @@
 
     "head1": {
         "type" : "header",
-        "description" : "Grades"
+        "description" : "Grade averages"
     },
 
     "show_grades": {
         "type" : "checkbox",
         "default" : true,
-        "description" : "Your grades",
-        "tooltip" : "Show your grades."
+        "description" : "Your grade averages",
+        "tooltip" : "Show your grade averages."
     },
 
     "group_sub_categ": {
@@ -61,7 +61,7 @@
     "show_grade_diff": {
         "type" : "checkbox",
         "default" : false,
-        "description" : "Show grade difference",
+        "description" : "Show grade average difference",
         "tooltip" : "Show the difference between your avereages, and your class's averages (You have to turn on class averages)."
     },
 
@@ -105,5 +105,24 @@
         "default": "1",
         "description": "Really Bad Grade.",
         "tooltip": "If your grade greater or equals to this, it will be displayed as a really bad grade. (Study sometimes...)"
+    },
+
+    "head2": {
+        "type" : "header",
+        "description" : "Grades"
+    },
+
+    "show_grade_panel": {
+        "type" : "checkbox",
+        "default" : false,
+        "description" : "Your grades",
+        "tooltip" : "Show your grades."
+    },
+
+    "group_grades_sub": {
+        "type" : "checkbox",
+        "default" : false,
+        "description" : "Group grades by subject",
+        "tooltip" : "Group your grades by the subject."
     }
 }

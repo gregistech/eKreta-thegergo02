@@ -58,7 +58,7 @@ EKretaDesklet.prototype = {
         this.settings.bind("usr", "usrN", this.onSettingChanged);
         this.settings.bind("pass", "passW", this.onSettingChanged);
         this.settings.bind("delay_minutes", "delayMinutes", this.onSettingChanged);
-        // Grades
+        // Grade averages
         this.settings.bind("show_grades", "showGrades", this.onSettingChanged);
         this.settings.bind("group_sub_categ", "groupSubCateg", this.onSettingChanged);
         this.settings.bind("show_class_av", "showClassAv", this.onSettingChanged);
@@ -70,6 +70,10 @@ EKretaDesklet.prototype = {
         this.settings.bind("middle_grade_value", "middleGradeValue", this.onSettingChanged);
         this.settings.bind("bad_grade_value", "badGradeValue", this.onSettingChanged);
         this.settings.bind("really_bad_grade_value", "reallyBadGradeValue", this.onSettingChanged);
+        // Grades
+        this.settings.bind("show_grade_panel", "showGradePanel", this.onSettingChanged);
+        this.settings.bind("group_grades_sub", "groupGradesSub", this.onSettingChanged);
+
         global.log(UUID + ":" + _("Loaded settings."));
         return;
     },
@@ -139,7 +143,7 @@ EKretaDesklet.prototype = {
         });
 
         if (studentDetails === "cantgetauth") {
-            this.bigText = new St.Label({style_class: "normalLabel"});
+            this.bigText = new St.Label({style_class: "boldLabel"});
             this.bigText.set_text(_("Error: Couldn't login with the credetinals given. (Check the desklet settings.)"));
 
             this.window.add(this.bigText);
@@ -147,11 +151,16 @@ EKretaDesklet.prototype = {
             return;
         }
 
-        this.bigText = new St.Label({style_class: "normalLabel"});
-        this.bigText.set_text(studentDetails.Name + " (" + studentDetails.InstituteName + ")");
-        this.window.add(this.bigText);
+        this.nameText = new St.Label({style_class: "normalLabel"});
+        this.nameText.set_text(studentDetails.Name + " (" + studentDetails.InstituteName + ")");
+        this.window.add(this.nameText);
+
+        this.panelText = new St.Label({style_class: "boldLabel"});
 
         if (this.showGrades) {
+            this.panelText.set_text("Grade averages");
+            this.window.add(this.panelText);
+
             if (this.groupSubCateg) {
                 let subjectCategories = new Array();
                 for(let i = 0; i < studentDetails["SubjectAverages"].length; i++) {
@@ -217,6 +226,92 @@ EKretaDesklet.prototype = {
 
                     this.currentText.set_text(this.currentSubText);
                     this.window.add(this.currentText);
+                }
+            }
+        } else if (this.showGradePanel) {
+            this.panelText.set_text("Your grades");
+            this.window.add(this.panelText);
+
+            let subjects = new Array();
+            for(let i = 0; i < studentDetails["Evaluations"].length; i++) {
+                if (subjects.indexOf(studentDetails["Evaluations"][i]["Subject"]) === -1 && studentDetails["Evaluations"][i]["Subject"] !== null) {
+                    subjects.push(studentDetails["Evaluations"][i]["Subject"]);
+                }
+            }
+            if (this.groupGradesSub) {
+                for (let j = 0; j < subjects.length; j++) {
+                    var subjectText = new St.Label({style_class: "boldLabel"});
+                    subjectText.set_text(subjects[j]);
+                    this.window.add(subjectText);
+                    for (let i = 0; i < studentDetails["Evaluations"].length; i++) {
+                        var gradeSubject = studentDetails["Evaluations"][i]["Subject"];
+                        if (gradeSubject === subjects[j]) {
+                            var gradeForm = studentDetails["Evaluations"][i]["Form"];
+                            var gradeMode = studentDetails["Evaluations"][i]["Mode"];
+                            var gradeTheme = studentDetails["Evaluations"][i]["Theme"];
+                            var gradeNumValue = studentDetails["Evaluations"][i]["NumberValue"];
+                            var gradeTypeName = studentDetails["Evaluations"][i]["TypeName"];
+                            var gradeValue = studentDetails["Evaluations"][i]["Value"];
+            
+                            if (gradeNumValue !== null) {
+                                this.getGradeColor(gradeNumValue,function(result,upperThis) {
+                                    upperThis.gradeColour = result;
+                                });
+                            }
+            
+                            if (gradeForm !== "Diligence" && gradeForm !== "Deportment") {
+                                if (gradeTheme !== "" && gradeTheme !== null) {
+                                    var evaluationString = gradeSubject  + " : " + gradeMode + " : " + gradeTheme + " : " + gradeNumValue;
+                                } else {
+                                    var evaluationString = gradeSubject  + " : " + gradeMode + " : " + gradeNumValue;
+                                }
+                                var currentText = new St.Label({style_class: this.gradeColour});
+            
+                                currentText.set_text(evaluationString);
+                                this.window.add(currentText);
+                            } else {
+                                var evaluationString = gradeForm + " : " + gradeTypeName + " : " + gradeValue;
+                                var currentText = new St.Label({style_class: "normalLabel"});
+            
+                                currentText.set_text(evaluationString);
+                                this.window.add(currentText);
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < studentDetails["Evaluations"].length; i++) {
+                    var gradeForm = studentDetails["Evaluations"][i]["Form"];
+                    var gradeSubject = studentDetails["Evaluations"][i]["Subject"];
+                    var gradeMode = studentDetails["Evaluations"][i]["Mode"];
+                    var gradeTheme = studentDetails["Evaluations"][i]["Theme"];
+                    var gradeNumValue = studentDetails["Evaluations"][i]["NumberValue"];
+                    var gradeTypeName = studentDetails["Evaluations"][i]["TypeName"];
+                    var gradeValue = studentDetails["Evaluations"][i]["Value"];
+    
+                    if (gradeNumValue !== null) {
+                        this.getGradeColor(gradeNumValue,function(result,upperThis) {
+                            upperThis.gradeColour = result;
+                        });
+                    }
+    
+                    if (gradeForm !== "Diligence" && gradeForm !== "Deportment") {
+                        if (gradeTheme !== "" && gradeTheme !== null) {
+                            var evaluationString = gradeSubject  + " : " + gradeMode + " : " + gradeTheme + " : " + gradeNumValue;
+                        } else {
+                            var evaluationString = gradeSubject  + " : " + gradeMode + " : " + gradeNumValue;
+                        }
+                        var currentText = new St.Label({style_class: this.gradeColour});
+    
+                        currentText.set_text(evaluationString);
+                        this.window.add(currentText);
+                    } else {
+                        var evaluationString = gradeForm + " : " + gradeTypeName + " : " + gradeValue;
+                        var currentText = new St.Label({style_class: "normalLabel"});
+    
+                        currentText.set_text(evaluationString);
+                        this.window.add(currentText);
+                    }
                 }
             }
         }
