@@ -1,4 +1,5 @@
 # eKreta@thegergo02
+![icon.png](icon.png)  
 ![A magyar verzió itt van](README_hu.md)
 
 ## Features
