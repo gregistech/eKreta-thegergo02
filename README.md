@@ -8,6 +8,10 @@
   * Coloring your subject by their average (+ Customise the grade ranges),
   * Displaying class averages,
   * Compare your averages to class averages.
+* Displaying your grades
+  * Group by subject,
+  * Color your grades by their value,
+  * Display details about your grades.
 
 ## Coming Features
 * When changing settings, you don't need to reload the desklet.
