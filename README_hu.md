@@ -9,7 +9,11 @@
   * Tantárgyak kiszínezése átlag alapján (+ Az osztályzatok tartományának testreszabása),
   * Osztály átlag megjelenítése,
   * A te és az osztályod átlagának összehasonlítása.
-
+* A jegyeid kijelzése
+  * Csoportosítás tantárgyak szerint,
+  * A jegyeid színezése értékük alapján,
+  * Minden információ megjelenítése a jegyeidről.
+  
 ## Fejlesztésben lévő funkciók
 * A beállítások megváltoztatása után nem kell a deskletet újratölteni.
 * Új kinézet
