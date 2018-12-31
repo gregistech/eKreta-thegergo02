@@ -22,7 +22,8 @@
 * Translate to other languages (especially to Hungarian)
 
 ## Screenshot
-![screenshot.png](screenshot.png)
+![screenshot_av.png](screenshot_av.png)
+![screenshot_gra.png](screenshot_gra.png)
 
 ## Changelog
 
