@@ -1,5 +1,6 @@
 # eKreta@thegergo02
 
+![icon.png](icon.png)  
 ![The english version is here](README.md)
 
 ## Funkciók
