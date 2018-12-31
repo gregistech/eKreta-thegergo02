@@ -15,6 +15,7 @@ const UUID = "eKreta@thegergo02";
 
 //Some variable initialization
 var httpSession = new Soup.SessionAsync();
+var isSettingChangedRunning = true;
 
 //Setting up translations
 Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale")
@@ -83,6 +84,7 @@ EKretaDesklet.prototype = {
         this.getAuthToken(this.instID, this.usrN, this.passW, function(result, upperThis) {
             upperThis.getStudentDetails(upperThis.instID,result,function(result, upperThis) {
                 upperThis.setupUI(result);
+                isSettingChangedRunning = false;
             });
         });
         return;
@@ -373,6 +375,14 @@ EKretaDesklet.prototype = {
         this.loadingText.set_text("Loading...");
         this.loadingWindow.add(this.loadingText);
         this.setContent(this.loadingWindow)
+    },
+
+    onSettingChanged() {
+        if (!isSettingChangedRunning) {
+            isSettingChangedRunning = true;
+            this.removeUpdateTimer();
+            this.onUpdate();
+        }
     },
 
     //When the desklet gets removed

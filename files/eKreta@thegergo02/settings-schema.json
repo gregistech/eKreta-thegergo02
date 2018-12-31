@@ -4,11 +4,6 @@
         "description" : "Settings for eKreta desklet."
     },
 
-    "disclaimer": {
-        "type" : "header",
-        "description" : "You need to reload the desklet for the changes to apply."
-    },
-
     "inst_id": {
         "type": "entry",
         "default": "klik",
