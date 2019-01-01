@@ -373,6 +373,7 @@ EKretaDesklet.prototype = {
                 message.request_headers.append(headers[i][0],headers[i][1]);
             }
         }
+        message.request_headers.append("Accept-Encoding","gzip");
 
         if (postParameters !== null) {message.set_request("application/x-www-form-urlencoded",2,postParameters);}
 
