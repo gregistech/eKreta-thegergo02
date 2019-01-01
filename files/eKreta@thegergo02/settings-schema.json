@@ -32,6 +32,13 @@
         "tooltip": "The time to wait till' the next data update. (In minutes)."
     },
 
+    "gzip_enabled": {
+        "type" : "checkbox",
+        "default" : true,
+        "description" : "Enable gZip",
+        "tooltip" : "Enable this if you want faster responses. On really old hardware, (if it can run Cinnamon, it can't be that old) it's better to turn off compression."
+    },
+
     "head1": {
         "type" : "header",
         "description" : "Grade averages"

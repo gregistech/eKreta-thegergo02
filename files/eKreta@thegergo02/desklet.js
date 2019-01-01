@@ -58,6 +58,7 @@ EKretaDesklet.prototype = {
         this.settings.bind("usr", "usrN", this.onSettingChanged);
         this.settings.bind("pass", "passW", this.onSettingChanged);
         this.settings.bind("delay_minutes", "delayMinutes", this.onSettingChanged);
+        this.settings.bind("gzip_enabled", "gzipEnabled", this.onSettingChanged);
         // Grade averages
         this.settings.bind("show_grades", "showGrades", this.onSettingChanged);
         this.settings.bind("group_sub_categ", "groupSubCateg", this.onSettingChanged);
@@ -373,7 +374,9 @@ EKretaDesklet.prototype = {
                 message.request_headers.append(headers[i][0],headers[i][1]);
             }
         }
-        message.request_headers.append("Accept-Encoding","gzip");
+        if (this.gzipEnabled) {
+            message.request_headers.append("Accept-Encoding","gzip");
+        }
 
         if (postParameters !== null) {message.set_request("application/x-www-form-urlencoded",2,postParameters);}
 
