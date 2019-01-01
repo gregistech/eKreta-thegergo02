@@ -4,6 +4,7 @@
 
 ## Features
 * Automated data reload
+* When changing settings, you don't need to reload the desklet.  
 * Displaying your subject averages
   * Grouping by subject categories,
   * Coloring your subject by their average (+ Customise the grade ranges),
@@ -16,7 +17,6 @@
   * Display details about your grades.  
 ![screenshot_gra.png](screenshot_gra.png)
 ## Coming Features
-* When changing settings, you don't need to reload the desklet.
 * Better UI
 * Tabs
   * Display everything it can fetch from the KRETA servers.
