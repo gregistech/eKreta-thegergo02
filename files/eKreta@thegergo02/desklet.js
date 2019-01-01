@@ -415,6 +415,10 @@ EKretaDesklet.prototype = {
         });
     },
 
+    //HTTP request creator function
+    /*
+        This function creates all of our HTTP requests.
+    */
     httpRequest(method,url,headers,postParameters,callbackF) {
         var message = Soup.Message.new(
             method,
@@ -499,6 +503,10 @@ EKretaDesklet.prototype = {
         this.setContent(this.loadingWindow)
     },
 
+    //When the settings gets changed
+    /*
+        It reloads the desklet with the new settings.
+    */
     onSettingChanged() {
         if (!isSettingChangedRunning) {
             isSettingChangedRunning = true;
@@ -517,6 +525,7 @@ EKretaDesklet.prototype = {
     }
 };
 
+//Calls the desklet.
 function main(metadata, desklet_id) {
     return new EKretaDesklet(metadata, desklet_id);
 }
