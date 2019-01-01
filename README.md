@@ -16,6 +16,10 @@
   * Color your grades by their value,
   * Display details about your grades.  
 ![screenshot_gra.png](screenshot_gra.png)
+* Display your absences
+  * Color by their type,
+  * Display every detail.  
+![screenshot_ab.png](screenshot_ab.png)
 ## Coming Features
 * Better UI
 * Tabs

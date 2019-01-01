@@ -17,7 +17,11 @@
   * A jegyeid színezése értékük alapján,
   * Minden információ megjelenítése a jegyeidről.  
 ![screenshot_gra.png](screenshot_gra.png)
-  
+* A hiányzások megjelenítése
+  * Típus szerinti színezés,
+  * Minden információ kijelzése.  
+![screenshot_ab.png](screenshot_ab.png)
+
 ## Fejlesztésben lévő funkciók
 * Új kinézet
 * Fülek
