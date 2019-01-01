@@ -76,6 +76,7 @@ EKretaDesklet.prototype = {
         this.settings.bind("group_grades_sub", "groupGradesSub", this.onSettingChanged);
         //Absences
         this.settings.bind("show_absences", "showAbsences", this.onSettingChanged);
+        this.settings.bind("sort_absences", "sortAbsences", this.onSettingChanged);
 
         global.log(UUID + ":" + _("Loaded settings."));
         return;
@@ -320,21 +321,61 @@ EKretaDesklet.prototype = {
         } else if (this.showAbsences) {
             this.panelText.set_text("Absences");
             this.window.add(this.panelText);
-
-            for(let i = 0;i < studentDetails["Absences"].length;i++) {
-                var absenceString = studentDetails["Absences"][i]["TypeName"] + " : " + studentDetails["Absences"][i]["ModeName"] + " : " + studentDetails["Absences"][i]["JustificationStateName"] + " : " + studentDetails["Absences"][i]["JustificationTypeName"];
-                var currentTextColor;
-                if (studentDetails["Absences"][i]["JustificationType"] === "Justified") {
-                    currentTextColor = "perfectGrade";
-                } else if (studentDetails["Absences"][i]["JustificationType"] === "UnJustified") {
-                    currentTextColor = "reallyBadGrade";
-                } else if (studentDetails["Absences"][i]["JustificationType"] === "Medical") {
-                    currentTextColor = "medicalAbsence";
+            if (this.sortAbsences) {
+                let subjects = new Array();
+                for(let i = 0; i < studentDetails["Absences"].length; i++) {
+                    if (subjects.indexOf(studentDetails["Absences"][i]["Subject"]) === -1 && studentDetails["Absences"][i]["Subject"] !== null) {
+                        subjects.push(studentDetails["Absences"][i]["Subject"]);
+                    }
                 }
-                
-                var currentText = new St.Label({style_class: currentTextColor});
-                currentText.set_text(absenceString);
-                this.window.add(currentText);
+
+                for (let j = 0; j < subjects.length;j++) {
+                    var curSubjectText = new St.Label({style_class: "boldLabel"});
+                    curSubjectText.set_text(subjects[j]);
+                    this.window.add(curSubjectText);
+
+                    for(let i = 0;i < studentDetails["Absences"].length;i++) {
+                        if (studentDetails["Absences"][i]["Subject"] === subjects[j]) {
+                            var absenceLessonStartTime = studentDetails["Absences"][i]["LessonStartTime"];
+                                var n = absenceLessonStartTime.lastIndexOf('T');
+                                absenceLessonStartTime = absenceLessonStartTime.substring(0,n);
+        
+                            var absenceString = absenceLessonStartTime + " : " + studentDetails["Absences"][i]["TypeName"] + " : " + studentDetails["Absences"][i]["ModeName"] + " : " + studentDetails["Absences"][i]["JustificationStateName"] + " : " + studentDetails["Absences"][i]["JustificationTypeName"];
+                            var currentTextColor;
+                            if (studentDetails["Absences"][i]["JustificationType"] === "Justified") {
+                                currentTextColor = "perfectGrade";
+                            } else if (studentDetails["Absences"][i]["JustificationType"] === "UnJustified") {
+                                currentTextColor = "reallyBadGrade";
+                            } else if (studentDetails["Absences"][i]["JustificationType"] === "Medical") {
+                                currentTextColor = "medicalAbsence";
+                            }
+                            
+                            var currentText = new St.Label({style_class: currentTextColor});
+                            currentText.set_text(absenceString);
+                            this.window.add(currentText);
+                        }
+                    }
+                }
+            } else {
+                for(let i = 0;i < studentDetails["Absences"].length;i++) {
+                    var absenceLessonStartTime = studentDetails["Absences"][i]["LessonStartTime"];
+                        var n = absenceLessonStartTime.lastIndexOf('T');
+                        absenceLessonStartTime = absenceLessonStartTime.substring(0,n);
+
+                    var absenceString = absenceLessonStartTime + " : " + studentDetails["Absences"][i]["TypeName"] + " : " + studentDetails["Absences"][i]["ModeName"] + " : " + studentDetails["Absences"][i]["JustificationStateName"] + " : " + studentDetails["Absences"][i]["JustificationTypeName"];
+                    var currentTextColor;
+                    if (studentDetails["Absences"][i]["JustificationType"] === "Justified") {
+                        currentTextColor = "perfectGrade";
+                    } else if (studentDetails["Absences"][i]["JustificationType"] === "UnJustified") {
+                        currentTextColor = "reallyBadGrade";
+                    } else if (studentDetails["Absences"][i]["JustificationType"] === "Medical") {
+                        currentTextColor = "medicalAbsence";
+                    }
+                    
+                    var currentText = new St.Label({style_class: currentTextColor});
+                    currentText.set_text(absenceString);
+                    this.window.add(currentText);
+                }
             }
         }
         

@@ -46,7 +46,7 @@
 
     "show_grades": {
         "type" : "checkbox",
-        "default" : true,
+        "default" : false,
         "description" : "Your grade averages",
         "tooltip" : "Show your grade averages."
     },
@@ -143,5 +143,12 @@
         "default" : false,
         "description" : "Your absences",
         "tooltip" : "Show your absences."
+    },
+
+    "sort_absences": {
+        "type" : "checkbox",
+        "default" : false,
+        "description" : "Sort absences by subject",
+        "tooltip" : "Organize your absences by your subjects."
     }
 }
