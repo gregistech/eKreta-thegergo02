@@ -327,31 +327,10 @@ EKretaDesklet.prototype = {
         with the given login details. 
     */
     getAuthToken(instID, usrN, passW, callbackF) {
-        global.log(UUID + ":" + _("Setting up a POST request in getAuthToken()."));
-        var message = Soup.Message.new(
-            "POST",
-            "https://" + instID + ".e-kreta.hu/idp/api/v1/Token"
-        );
-
         var postParameters = "institute_code=" + instID + "&userName=" + usrN + "&password=" + passW + "&grant_type=password&client_id=919e0c1c-76a2-4646-a2fb-7085bbbf3c56";
-        message.set_request("application/x-www-form-urlencoded",2,postParameters);
-
-        httpSession.queue_message(message,
-            Lang.bind(this, function(session, response) {
-                if (response.status_code !== Soup.KnownStatusCode.OK) {
-                    global.log(UUID + ":" + _("Error during download in getAuthToken(x,y,z)") + ": response code " +
-                        response.status_code + ": " + response.reason_phrase + " - " +
-                        response.response_body.data);
-                    global.log(UUID + ":" + _("Getting auth token failed, passing 'cantgetauth'."));
-                    callbackF('cantgetauth', this);
-                    return;
-                }
-                var result = JSON.parse(message.response_body.data);
-                global.log(UUID + ":" + _("Got correct response in getAuthToken()."));
-                callbackF(result["access_token"], this);
-                return;
-            })
-        );
+        this.httpRequest("POST","https://" + instID + ".e-kreta.hu/idp/api/v1/Token",null,postParameters,function(result,upperThis) {
+            callbackF(result["access_token"],upperThis);
+        })
     },
 
     //Student data fetcher function
@@ -366,28 +345,9 @@ EKretaDesklet.prototype = {
             return;
         }
 
-        global.log(UUID + ":" + _("Setting up a GET request in getStudentDetails()."));
-        var message = Soup.Message.new(
-            "GET",
-            "https://" + instID + ".e-kreta.hu/mapi/api/v1/Student"
-        );
-        message.request_headers.append("Authorization", "Bearer " + authToken);
-    
-        httpSession.queue_message(message,
-            Lang.bind(this, function(session, response) {
-                if (response.status_code !== Soup.KnownStatusCode.OK) {
-                    global.log(UUID + ":" + _("Error during download in getStudentDetails()") + ": response code " +
-                        response.status_code + ": " + response.reason_phrase + " - " +
-                        response.response_body.data);
-                    callbackF("cantgetauth",this); //TODO: Create a correct error value.
-                    return;
-                }
-                var result = JSON.parse(message.response_body.data);
-                global.log(UUID + ":" + _("Got correct response in getStudentDetails()."));
-                callbackF(result, this);
-                return;
-            })
-        );
+        this.httpRequest("GET", "https://" + instID + ".e-kreta.hu/mapi/api/v1/Student", [["Authorization", "Bearer " + authToken]], null,function(result,upperThis) {
+            callbackF(result,upperThis);
+        });
     },
 
     //Institute fetcher function
@@ -397,27 +357,41 @@ EKretaDesklet.prototype = {
     */
     //TODO: The user can automatically select his/her institution.
     getInstitutes(callbackF) {
+        this.httpRequest("GET", API_LINK_INST, [["apiKey", "7856d350-1fda-45f5-822d-e1a2f3f1acf0"]], null, function(result,upperThis) {
+            callbackF(result);
+        });
+    },
+
+    httpRequest(method,url,headers,postParameters,callbackF) {
         var message = Soup.Message.new(
-            "GET",
-            API_LINK_INST
+            method,
+            url
         );
-        message.request_headers.append("apiKey", "7856d350-1fda-45f5-822d-e1a2f3f1acf0");
-    
+
+        if (headers !== null) {
+            for (let i = 0;i < headers.length;i++) {
+                message.request_headers.append(headers[i][0],headers[i][1]);
+            }
+        }
+
+        if (postParameters !== null) {message.set_request("application/x-www-form-urlencoded",2,postParameters);}
+
         httpSession.queue_message(message,
             Lang.bind(this, function(session, response) {
                 if (response.status_code !== Soup.KnownStatusCode.OK) {
-                    global.log(_("Error during download getInsitutes()") + ": response code " +
+                    global.log(_("Error during download") + ": response code " +
                         response.status_code + ": " + response.reason_phrase + " - " +
                         response.response_body.data);
-                    callbackF("error", this);
+                    callbackF("cantgetauth", this); //TODO: Correct error value.
                     return;
                 }
-    
+                
                 var result = JSON.parse(message.response_body.data);
                 callbackF(result, this);
                 return;
             })
         );
+        return
     },
 
     //Grade coloring mechanism
