@@ -74,6 +74,8 @@ EKretaDesklet.prototype = {
         // Grades
         this.settings.bind("show_grade_panel", "showGradePanel", this.onSettingChanged);
         this.settings.bind("group_grades_sub", "groupGradesSub", this.onSettingChanged);
+        //Absences
+        this.settings.bind("show_absences", "showAbsences", this.onSettingChanged);
 
         global.log(UUID + ":" + _("Loaded settings."));
         return;
@@ -314,6 +316,25 @@ EKretaDesklet.prototype = {
                         this.window.add(currentText);
                     }
                 }
+            }
+        } else if (this.showAbsences) {
+            this.panelText.set_text("Absences");
+            this.window.add(this.panelText);
+
+            for(let i = 0;i < studentDetails["Absences"].length;i++) {
+                var absenceString = studentDetails["Absences"][i]["TypeName"] + " : " + studentDetails["Absences"][i]["ModeName"] + " : " + studentDetails["Absences"][i]["JustificationStateName"] + " : " + studentDetails["Absences"][i]["JustificationTypeName"];
+                var currentTextColor;
+                if (studentDetails["Absences"][i]["JustificationType"] === "Justified") {
+                    currentTextColor = "perfectGrade";
+                } else if (studentDetails["Absences"][i]["JustificationType"] === "UnJustified") {
+                    currentTextColor = "reallyBadGrade";
+                } else if (studentDetails["Absences"][i]["JustificationType"] === "Medical") {
+                    currentTextColor = "medicalAbsence";
+                }
+                
+                var currentText = new St.Label({style_class: currentTextColor});
+                currentText.set_text(absenceString);
+                this.window.add(currentText);
             }
         }
         
