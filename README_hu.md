@@ -26,6 +26,12 @@
 
 ## Changelog
 
+### v0.1.2-alpha
+* Hiányzások megjelenítése.
+* Optimalizált http lekérések. (gZip implementálva)
+* Átláthatóbb kód.
+* Most már lehet a beállításokat változtatni a desklet újraindítása nélkül.
+
 ### v0.0.1 (Alpha)
 * Első kiadás! :+1:
 * Tantárgyak átlagának kijelzése

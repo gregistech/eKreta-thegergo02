@@ -28,6 +28,12 @@
 
 ## Changelog
 
+### v0.1.2-alpha
+* Added absences.
+* Optimized http request. (For example, I added gZip)
+* More organized code.
+* Now you can change settings without the need of reloading the desklet.
+
 ### v0.0.1 (Alpha)
 * First release! :+1:
 * Display your subject's grade average
