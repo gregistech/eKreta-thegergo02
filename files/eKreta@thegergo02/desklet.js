@@ -44,7 +44,6 @@ EKretaDesklet.prototype = {
         this.setHeader("eKreta");
         this.loadSettings();
         this.onUpdate();
-        global.log(UUID + ":" + _("Desklet started."));
     },
 
     //Settings loader function
@@ -77,8 +76,6 @@ EKretaDesklet.prototype = {
         //Absences
         this.settings.bind("show_absences", "showAbsences", this.onSettingChanged);
         this.settings.bind("sort_absences", "sortAbsences", this.onSettingChanged);
-
-        global.log(UUID + ":" + _("Loaded settings."));
         return;
     },
 
@@ -104,7 +101,6 @@ EKretaDesklet.prototype = {
         this reloads the data and sets up the UI with the new data. 
     */
     onUpdate() {
-        global.log(UUID + ":" + _("onUpdate() got called."));
         this.setUpdateTimer();
         this.updateData();
         return;
@@ -116,9 +112,7 @@ EKretaDesklet.prototype = {
         and with it we fetch the current data, 
     */
     setUpdateTimer() {
-        global.log(UUID + ":" + _("setUpdateTimer() got called."));
         this.updateLoop = Mainloop.timeout_add(this.delayMinutes * 60 * 1000, Lang.bind(this, this.onUpdate));
-        global.log(UUID + ":" + _("Setting up mainloop (for " + this.delayMinutes + " min), and binding onUpdate() to it."));
         return;
     },
 
@@ -130,7 +124,6 @@ EKretaDesklet.prototype = {
     removeUpdateTimer() {
         if (this.updateLoop !== null) {
             Mainloop.source_remove(this.updateLoop);
-            global.log(UUID + ":" + _("Removing Mainloop."));
         }
         return;
     },
@@ -379,9 +372,7 @@ EKretaDesklet.prototype = {
             }
         }
         
-        this.setContent(this.window);
-        global.log(UUID + ":" + _("UI now ready in setupUI(x)."));
-        global.log(UUID + ":" + _("Desklet loaded successfully."));
+        this.setContent(this.window);    
     },
 
     //Auth token fetcher function
@@ -403,7 +394,6 @@ EKretaDesklet.prototype = {
     */
     getStudentDetails(instID,authToken,callbackF) {
         if (authToken == "cantgetauth") {
-            global.log(UUID + ":" + _("getStudentDetails() aknowledged that the auth token doesn't exist, passing 'cantgetauth' value."));
             callbackF("cantgetauth", this);
             return;
         }
@@ -445,9 +435,6 @@ EKretaDesklet.prototype = {
         httpSession.queue_message(message,
             Lang.bind(this, function(session, response) {
                 if (response.status_code !== Soup.KnownStatusCode.OK) {
-                    global.log(_("Error during download") + ": response code " +
-                        response.status_code + ": " + response.reason_phrase + " - " +
-                        response.response_body.data);
                     callbackF("cantgetauth", this); //TODO: Correct error value.
                     return;
                 }
@@ -527,7 +514,6 @@ EKretaDesklet.prototype = {
     */
     on_desklet_removed() {
         this.removeUpdateTimer();
-        global.log(UUID + ":" + _("Desklet got removed."));
     }
 };
 
