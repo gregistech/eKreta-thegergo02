@@ -20,6 +20,11 @@
   * Color by their type,
   * Display every detail.  
 ![screenshot_ab.png](screenshot_ab.png)
+* Timetable/Lessons
+  * See your next lesson,
+  * The current is is displayed in bold.  
+![screenshot_tt.png](screenshot_tt.png)  
+
 ## Coming Features
 * Better UI
 * Tabs
@@ -27,8 +32,7 @@
 * Translate to other languages (especially to Hungarian)
 
 ## Screenshot
-![screenshot_av.png](screenshot_av.png)
-![screenshot_gra.png](screenshot_gra.png)
+Editing eKreta-thegergo02_README_hu.md at master · thegergo02_eKreta-thegergo02
 
 ## Changelog
 
