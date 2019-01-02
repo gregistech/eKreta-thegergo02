@@ -169,8 +169,12 @@ EKretaDesklet.prototype = {
             return;
         }
 
+        var studentName = studentDetails["Name"]
+        var studentInstituteName = studentDetails["InstituteName"];
+        var studentSubjectAverages = studentDetails["SubjectAverages"];
+
         this.nameText = new St.Label({style_class: "normalLabel"});
-        this.nameText.set_text(studentDetails.Name + " (" + studentDetails.InstituteName + ")");
+        this.nameText.set_text(studentName + " (" + studentInstituteName + ")");
         this.window.add(this.nameText);
 
         this.panelText = new St.Label({style_class: "boldLabel"});
@@ -181,9 +185,9 @@ EKretaDesklet.prototype = {
 
             if (this.groupSubCateg) {
                 let subjectCategories = new Array();
-                for(let i = 0; i < studentDetails["SubjectAverages"].length; i++) {
-                    if (subjectCategories.indexOf(studentDetails["SubjectAverages"][i]["SubjectCategoryName"]) === -1) {
-                        subjectCategories.push(studentDetails["SubjectAverages"][i]["SubjectCategoryName"]);
+                for(let i = 0; i < studentSubjectAverages.length; i++) {
+                    if (subjectCategories.indexOf(studentSubjectAverages[i]["SubjectCategoryName"]) === -1) {
+                        subjectCategories.push(studentSubjectAverages[i]["SubjectCategoryName"]);
                     }
                 }
 
@@ -192,23 +196,24 @@ EKretaDesklet.prototype = {
                     this.currentSubjectText.set_text(subjectCategories[j]);
                     this.window.add(this.currentSubjectText);
                     for(let i = 0; i < studentDetails["SubjectAverages"].length; i++) {
-                        this.gradeAverage = studentDetails["SubjectAverages"][i]["Value"];
-                        this.subjectName = studentDetails["SubjectAverages"][i]["Subject"];
-                        this.classAverage = studentDetails["SubjectAverages"][i]["ClassValue"];
+                        var gradeAverage = studentSubjectAverages[i]["Value"];
+                        var subjectName = studentSubjectAverages[i]["Subject"];
+                        var classAverage = studentSubjectAverages[i]["ClassValue"];
+                        var subjectCategoryName = studentSubjectAverages[i]["SubjectCategoryName"];
 
-                        if (studentDetails["SubjectAverages"][i]["SubjectCategoryName"] === subjectCategories[j]) {
-                            this.getGradeColor(this.gradeAverage,function(result,upperThis) {
+                        if (subjectCategoryName === subjectCategories[j]) {
+                            this.getGradeColor(gradeAverage,function(result,upperThis) {
                                 upperThis.gradeColor = result;
                             });
         
                             this.currentText = new St.Label({style_class: this.gradeColor});
-                            this.currentSubText = this.subjectName + ": " + this.gradeAverage;
+                            this.currentSubText = subjectName + ": " + gradeAverage;
         
                             if (this.showClassAv) {
-                                this.currentSubText += " (Class Av.: " + this.classAverage +")";
+                                this.currentSubText += " (Class Av.: " + classAverage +")";
         
                                 if (this.showGradeDiff) {
-                                    this.getClassGradeDiff(this.gradeAverage, this.classAverage, function(result, upperThis) {
+                                    this.getClassGradeDiff(gradeAverage, classAverage, function(result, upperThis) {
                                         upperThis.currentSubText += result;
                                     });
                                 }
