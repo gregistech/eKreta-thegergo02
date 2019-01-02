@@ -32,7 +32,10 @@
 * Translate to other languages (especially to Hungarian)
 
 ## Screenshot
-Editing eKreta-thegergo02_README_hu.md at master · thegergo02_eKreta-thegergo02
+![screenshot_av.png](screenshot_av.png)
+![screenshot_gra.png](screenshot_gra.png)
+![screenshot_ab.png](screenshot_ab.png)
+![screenshot_tt.png](screenshot_tt.png)
 
 ## Changelog
 
