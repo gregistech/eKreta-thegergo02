@@ -150,5 +150,17 @@
         "default" : false,
         "description" : "Sort absences by subject",
         "tooltip" : "Organize your absences by your subjects."
+    },
+
+    "head4": {
+        "type" : "header",
+        "description" : "Lessons"
+    },
+
+    "show_lessons": {
+        "type" : "checkbox",
+        "default" : false,
+        "description" : "Show lessons",
+        "tooltip" : "Show your lessons."
     }
 }

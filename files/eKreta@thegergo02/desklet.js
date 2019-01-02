@@ -76,6 +76,9 @@ EKretaDesklet.prototype = {
         //Absences
         this.settings.bind("show_absences", "showAbsences", this.onSettingChanged);
         this.settings.bind("sort_absences", "sortAbsences", this.onSettingChanged);
+        //Lessons
+        this.settings.bind("show_lessons", "showLessons", this.onSettingChanged);
+        
         return;
     },
 
@@ -87,8 +90,26 @@ EKretaDesklet.prototype = {
     updateData() {
         this.showLoadingScreen();
         this.getAuthToken(this.instID, this.usrN, this.passW, function(result, upperThis) {
-            upperThis.getStudentDetails(upperThis.instID,result,function(result, upperThis) {
-                upperThis.setupUI(result);
+            upperThis.curAuthToken = result;
+            upperThis.getStudentDetails(upperThis.instID,upperThis.curAuthToken,function(result, upperThis) {
+                upperThis.curStudentDetails = result;
+                if (!upperThis.showLessons) {
+                    upperThis.setupUI(result,null);
+                } else {
+                    upperThis.getCurrentWeek(function(StartDate,EndDate,upperThis) {
+                        var startDate = StartDate.getFullYear() + "-" + ((StartDate.getMonth() == 0) ? "01" : StartDate.getMonth()) + "-" + ((StartDate.getDate() < 10) ? "0" + StartDate.getDate() : StartDate.getDate());
+                        var endDate = EndDate.getFullYear() + "-" + ((EndDate.getMonth() == 0) ? "01" : EndDate.getMonth()) + "-" + ((EndDate.getDate() < 10) ? "0" + EndDate.getDate() : EndDate.getDate());
+                        
+                        upperThis.getLessons(upperThis.curAuthToken,upperThis.instID,startDate, endDate,function(result,upperThis) {
+                            for (let i = 0; i < result.length; i++) {
+                                var n = result[i]["Date"].lastIndexOf('T');
+                                result[i]["Date"] = result[i]["Date"].substring(0,n);
+                            }
+                            result["EndDate"] = endDate;
+                            upperThis.setupUI(upperThis.curStudentDetails,result);
+                        });
+                }, upperThis);
+                }
                 isSettingChangedRunning = false;
             });
         });
@@ -133,7 +154,7 @@ EKretaDesklet.prototype = {
         This creates the user interface for our desklet,
         so it's an important function. 
     */
-    setupUI(studentDetails) {
+    setupUI(studentDetails,lessonDetails) {
         this.window = new St.BoxLayout({
             vertical: true,
             style_class: "container"
@@ -370,6 +391,63 @@ EKretaDesklet.prototype = {
                     this.window.add(currentText);
                 }
             }
+        } else if (this.showLessons) {
+            this.panelText.set_text("Lessons");
+            this.window.add(this.panelText);
+
+            for (let j = 0;j < 6;j++) {
+                switch (j) {
+                    case 0: { 
+                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        dayText.set_text("Hétfő"); 
+                        break;
+                    }
+                    case 1: { 
+                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        dayText.set_text("Kedd"); 
+                        break;
+                    }
+                    case 2: { 
+                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        dayText.set_text("Szerda"); 
+                        break;
+                    }
+                    case 3: { 
+                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        dayText.set_text("Csütörtök"); 
+                        break;
+                    }
+                    case 4: { 
+                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        dayText.set_text("Péntek"); 
+                        break;
+                    }
+                    case 5: { 
+                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        dayText.set_text("Szombat"); 
+                        break;
+                    }
+                    case 6: { 
+                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        dayText.set_text("Vasárnap"); 
+                        break;
+                    }
+
+                }
+                this.window.add(dayText);
+                for (let i = 0; i < lessonDetails.length; i++) {
+                    var startDate = new Date(lessonDetails[i]["Date"]);
+
+                    if (startDate < new Date(lessonDetails["EndDate"]) && startDate.getDay() === j + 1) {
+                        var n = lessonDetails[i]["StartTime"].lastIndexOf('T');
+                        lessonDetails[i]["StartTime"] = lessonDetails[i]["StartTime"].substring(0,n);
+                        
+                        var lessonText = new St.Label({ style_class: "medicalAbsence" })
+                        lessonText.set_text(lessonDetails[i]["Count"] + " : " + lessonDetails[i]["Subject"] + " : " + lessonDetails[i]["StartTime"]);
+                        this.window.add(lessonText);
+                    }
+                }
+            }
         }
         
         this.setContent(this.window);    
@@ -415,6 +493,12 @@ EKretaDesklet.prototype = {
         });
     },
 
+    getLessons(authToken,instID,fromDate,toDate,callbackF) {
+        this.httpRequest("GET", "https://" + instID + ".e-kreta.hu/mapi/api/v1/Lesson", [["Authorization", "Bearer " + authToken]], "fromDate=" + fromDate + "&toDate=" + toDate, function(result,upperThis) {
+            callbackF(result,upperThis);
+        });
+    },
+
     //HTTP request creator function
     /*
         This function creates all of our HTTP requests.
@@ -439,6 +523,7 @@ EKretaDesklet.prototype = {
         httpSession.queue_message(message,
             Lang.bind(this, function(session, response) {
                 if (response.status_code !== Soup.KnownStatusCode.OK) {
+                    global.log(response.status_code + " : " + response.response_body.data);
                     callbackF("cantgetauth", this); //TODO: Correct error value.
                     return;
                 }
@@ -486,6 +571,20 @@ EKretaDesklet.prototype = {
         } else {
             callbackF(" (Your grade is equal)", this);
         }
+    },
+
+    getCurrentWeek(callbackF, upperThis) {
+        var today = new Date();
+        var day = today.getDay();
+        var date = today.getDate() - day;
+
+        // Grabbing Start/End Dates
+        var StartDate = new Date();
+        var EndDate = new Date();
+        StartDate.setHours(0,0,0,0); EndDate.setHours(0,0,0,0);
+        StartDate.setDate(today.getDate()-day);
+        EndDate.setDate(today.getDate()-day+6);
+        callbackF(StartDate,EndDate,upperThis);
     },
 
     //Loading screen shower function
