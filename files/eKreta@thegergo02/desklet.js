@@ -395,40 +395,48 @@ EKretaDesklet.prototype = {
             this.panelText.set_text("Lessons");
             this.window.add(this.panelText);
 
-            for (let j = 0;j < 6;j++) {
+            for (let j = 0;j <= 6;j++) {
+                var today = new Date().getDay();
                 switch (j) {
                     case 0: { 
-                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
+                        var dayText = new St.Label({ style_class: styleClassDay })
                         dayText.set_text("Hétfő"); 
                         break;
                     }
                     case 1: { 
-                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
+                        var dayText = new St.Label({ style_class: styleClassDay })
                         dayText.set_text("Kedd"); 
                         break;
                     }
                     case 2: { 
-                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
+                        var dayText = new St.Label({ style_class: styleClassDay })
                         dayText.set_text("Szerda"); 
                         break;
                     }
                     case 3: { 
-                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
+                        var dayText = new St.Label({ style_class: styleClassDay })
                         dayText.set_text("Csütörtök"); 
                         break;
                     }
                     case 4: { 
-                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
+                        var dayText = new St.Label({ style_class: styleClassDay })
                         dayText.set_text("Péntek"); 
                         break;
                     }
                     case 5: { 
-                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
+                        var dayText = new St.Label({ style_class: styleClassDay })
                         dayText.set_text("Szombat"); 
                         break;
                     }
                     case 6: { 
-                        var dayText = new St.Label({ style_class: "boldLabel" })
+                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
+                        var dayText = new St.Label({ style_class: styleClassDay })
                         dayText.set_text("Vasárnap"); 
                         break;
                     }
@@ -437,7 +445,7 @@ EKretaDesklet.prototype = {
                 this.window.add(dayText);
                 for (let i = 0; i < lessonDetails.length; i++) {
                     var startDate = new Date(lessonDetails[i]["Date"]);
-
+                    global.log(j);
                     if (startDate < new Date(lessonDetails["EndDate"]) && startDate.getDay() === j + 1) {
                         var n = lessonDetails[i]["StartTime"].lastIndexOf('T');
                         lessonDetails[i]["StartTime"] = lessonDetails[i]["StartTime"].substring(0,n);
