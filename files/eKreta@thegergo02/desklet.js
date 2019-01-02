@@ -396,56 +396,20 @@ EKretaDesklet.prototype = {
             this.window.add(this.panelText);
 
             for (let j = 0;j <= 6;j++) {
-                var today = new Date().getDay();
-                switch (j) {
-                    case 0: { 
-                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
-                        var dayText = new St.Label({ style_class: styleClassDay })
-                        dayText.set_text("Hétfő"); 
-                        break;
-                    }
-                    case 1: { 
-                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
-                        var dayText = new St.Label({ style_class: styleClassDay })
-                        dayText.set_text("Kedd"); 
-                        break;
-                    }
-                    case 2: { 
-                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
-                        var dayText = new St.Label({ style_class: styleClassDay })
-                        dayText.set_text("Szerda"); 
-                        break;
-                    }
-                    case 3: { 
-                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
-                        var dayText = new St.Label({ style_class: styleClassDay })
-                        dayText.set_text("Csütörtök"); 
-                        break;
-                    }
-                    case 4: { 
-                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
-                        var dayText = new St.Label({ style_class: styleClassDay })
-                        dayText.set_text("Péntek"); 
-                        break;
-                    }
-                    case 5: { 
-                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
-                        var dayText = new St.Label({ style_class: styleClassDay })
-                        dayText.set_text("Szombat"); 
-                        break;
-                    }
-                    case 6: { 
-                        var styleClassDay = ((j === today) ? "boldLabel" : "normalLabel");
-                        var dayText = new St.Label({ style_class: styleClassDay })
-                        dayText.set_text("Vasárnap"); 
-                        break;
-                    }
-
-                }
-                this.window.add(dayText);
+                this.curIterationDay = j;
+                this.isCurrentDay(j + 1,function(result, upperThis) {
+                    upperThis.getDayStyleClass(result,function(result, upperThis) {
+                        upperThis.curIterationDayStyle = result;
+                        upperThis.getDayName(upperThis.curIterationDay,function(result, upperThis) {
+                            upperThis.dayText = new St.Label({ style_class: upperThis.curIterationDayStyle });
+                            upperThis.dayText.set_text(result);
+                        });
+                    });
+                });
+                this.window.add(this.dayText);
+                
                 for (let i = 0; i < lessonDetails.length; i++) {
                     var startDate = new Date(lessonDetails[i]["Date"]);
-                    global.log(j);
                     if (startDate < new Date(lessonDetails["EndDate"]) && startDate.getDay() === j + 1) {
                         var n = lessonDetails[i]["StartTime"].lastIndexOf('T');
                         lessonDetails[i]["StartTime"] = lessonDetails[i]["StartTime"].substring(0,n);
@@ -522,11 +486,11 @@ EKretaDesklet.prototype = {
                 message.request_headers.append(headers[i][0],headers[i][1]);
             }
         }
-        if (this.gzipEnabled) {
+        if (this.gzipEnabled)
             message.request_headers.append("Accept-Encoding","gzip");
-        }
 
-        if (postParameters !== null) {message.set_request("application/x-www-form-urlencoded",2,postParameters);}
+        if (postParameters !== null) 
+            message.set_request("application/x-www-form-urlencoded",2,postParameters);
 
         httpSession.queue_message(message,
             Lang.bind(this, function(session, response) {
@@ -542,6 +506,53 @@ EKretaDesklet.prototype = {
             })
         );
         return
+    },
+
+    getDayName(dayNumber,callbackF) {
+        switch (dayNumber) {
+            case 0: { 
+                callbackF(_("Monday"), this); 
+                break;
+            }
+            case 1: { 
+                callbackF(_("Tuesday"), this); 
+                break;
+            }
+            case 2: { 
+                callbackF(_("Wednesday"), this); 
+                break;
+            }
+            case 3: { 
+                callbackF(_("Thursday"), this); 
+                break;
+            }
+            case 4: { 
+                callbackF(_("Friday"), this); 
+                break;
+            }
+            case 5: { 
+                callbackF(_("Saturday"), this); 
+                break;
+            }
+            case 6: { 
+                callbackF(_("Sunday"), this); 
+                break;
+            }
+            default: {
+                callbackF(_("Not a day"), this);
+            }
+        }
+    },
+
+    isCurrentDay(dayNumber,callbackF) {
+        callbackF(dayNumber == new Date().getDay(), this);
+    },
+
+    getDayStyleClass(isCurrentDay, callbackF) {
+        if (isCurrentDay)
+            callbackF("boldLabel", this);
+        else 
+            callbackF("normalLabel", this);
     },
 
     //Grade coloring mechanism
@@ -584,9 +595,7 @@ EKretaDesklet.prototype = {
     getCurrentWeek(callbackF, upperThis) {
         var today = new Date();
         var day = today.getDay();
-        var date = today.getDate() - day;
 
-        // Grabbing Start/End Dates
         var StartDate = new Date();
         var EndDate = new Date();
         StartDate.setHours(0,0,0,0); EndDate.setHours(0,0,0,0);
