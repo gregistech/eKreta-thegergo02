@@ -21,6 +21,16 @@
   * Típus szerinti színezés,
   * Minden információ kijelzése.  
 ![screenshot_ab.png](screenshot_ab.png)
+* Órarend
+  * Most már látod melyik órára kell bemenned,
+  * A mostani nap félkövérben van kiírva.  
+![screenshot_tt.png](screenshot_tt.png)  
+
+## Képernyőképek
+![screenshot_av.png](screenshot_av.png)
+![screenshot_gra.png](screenshot_gra.png)
+![screenshot_ab.png](screenshot_ab.png)
+![screenshot_tt.png](screenshot_tt.png)
 
 ## Fejlesztésben lévő funkciók
 * Új kinézet
