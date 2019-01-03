@@ -39,6 +39,11 @@
 
 ## Changelog
 
+### v0.2.5-alpha
+* Added timetable.
+* Abstracted a lot of code.
+* More organized code.
+
 ### v0.1.2-alpha
 * Added absences.
 * Optimized http request. (For example, I added gZip)
