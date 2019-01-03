@@ -184,12 +184,10 @@ EKretaDesklet.prototype = {
             this.window.add(this.panelText);
 
             if (this.groupSubCateg) {
-                let subjectCategories = new Array();
-                for(let i = 0; i < studentSubjectAverages.length; i++) {
-                    if (subjectCategories.indexOf(studentSubjectAverages[i]["SubjectCategoryName"]) === -1) {
-                        subjectCategories.push(studentSubjectAverages[i]["SubjectCategoryName"]);
-                    }
-                }
+                this.fetchSubjectsFromResponse(studentSubjectAverages,"SubjectCategoryName", function(result, upperThis) {
+                    upperThis.subjects = result;
+                });
+                var subjectCategories = this.subjects;
 
                 for(let j = 0; j < subjectCategories.length; j++) {
                     this.currentSubjectText = new St.Label({style_class: "boldLabel"});
@@ -255,13 +253,12 @@ EKretaDesklet.prototype = {
             this.panelText.set_text("Your grades");
             this.window.add(this.panelText);
 
-            let subjects = new Array();
-            for(let i = 0; i < studentDetails["Evaluations"].length; i++) {
-                if (subjects.indexOf(studentDetails["Evaluations"][i]["Subject"]) === -1 && studentDetails["Evaluations"][i]["Subject"] !== null) {
-                    subjects.push(studentDetails["Evaluations"][i]["Subject"]);
-                }
-            }
             if (this.groupGradesSub) {
+                this.fetchSubjectsFromResponse(studentDetails["Evaluations"],"Subject", function(result, upperThis) {
+                    upperThis.subjects = result;
+                });
+                var subjects = this.subjects;
+
                 for (let j = 0; j < subjects.length; j++) {
                     var subjectText = new St.Label({style_class: "boldLabel"});
                     subjectText.set_text(subjects[j]);
@@ -341,12 +338,11 @@ EKretaDesklet.prototype = {
             this.panelText.set_text("Absences");
             this.window.add(this.panelText);
             if (this.sortAbsences) {
-                let subjects = new Array();
-                for(let i = 0; i < studentDetails["Absences"].length; i++) {
-                    if (subjects.indexOf(studentDetails["Absences"][i]["Subject"]) === -1 && studentDetails["Absences"][i]["Subject"] !== null) {
-                        subjects.push(studentDetails["Absences"][i]["Subject"]);
-                    }
-                }
+                this.fetchSubjectsFromResponse(studentDetails["Absences"],"Subject", function(result, upperThis) {
+                    upperThis.subjects = result;
+                });
+
+                var subjects = this.subjects;
 
                 for (let j = 0; j < subjects.length;j++) {
                     var curSubjectText = new St.Label({style_class: "boldLabel"});
@@ -558,6 +554,17 @@ EKretaDesklet.prototype = {
             callbackF("boldLabel", this);
         else 
             callbackF("normalLabel", this);
+    },
+
+    fetchSubjectsFromResponse(array,subjectString,callbackF) {
+        var subjects = new Array();
+        for(let i = 0; i < array.length; i++) {
+            var currentSubject = array[i][subjectString];
+            if (subjects.indexOf(currentSubject) === -1 && currentSubject !== null) {
+                subjects.push(currentSubject);
+            }
+        }
+        callbackF(subjects, this);
     },
 
     //Grade coloring mechanism
