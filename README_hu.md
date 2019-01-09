@@ -40,6 +40,11 @@
 
 ## Changelog
 
+### v0.2.5-alpha
+* Órarend hozzáadva.
+* Sok duplikált kód eltüntetve.
+* Sokkal olvashatóbb kód.
+
 ### v0.1.2-alpha
 * Hiányzások megjelenítése.
 * Optimalizált http lekérések. (gZip implementálva)
