@@ -78,6 +78,7 @@ EKretaDesklet.prototype = {
         this.settings.bind("sort_absences", "sortAbsences", this.onSettingChanged);
         //Lessons
         this.settings.bind("show_lessons", "showLessons", this.onSettingChanged);
+        this.settings.bind("show_filtered_days", "showFilteredDays", this.onSettingChanged);
         
         return;
     },
@@ -396,6 +397,7 @@ EKretaDesklet.prototype = {
             this.panelText.set_text("Lessons");
             this.window.add(this.panelText);
 
+            var lastRun = 0;
             for (let j = 0;j <= 6;j++) {
                 this.curIterationDay = j;
                 this.isCurrentDay(j + 1,function(result, upperThis) {
@@ -407,8 +409,9 @@ EKretaDesklet.prototype = {
                         });
                     });
                 });
-                this.window.add(this.dayText);
-                
+                if (!this.showFilteredDays) {
+                    this.window.add(this.dayText);
+                }
                 for (let i = 0; i < lessonDetails.length; i++) {
                     var startDate = new Date(lessonDetails[i]["Date"]);
                     if (startDate < new Date(lessonDetails["EndDate"]) && startDate.getDay() === j + 1) {
@@ -418,6 +421,10 @@ EKretaDesklet.prototype = {
                         var lessonText = new St.Label({ style_class: "medicalAbsence" })
                         lessonText.set_text(lessonDetails[i]["Count"] + " : " + lessonDetails[i]["Subject"] + " : " + lessonDetails[i]["StartTime"]);
                         this.window.add(lessonText);
+                        if (lastRun !== j) {
+                            this.window.add(this.dayText);
+                            lastRun = j;
+                        }
                     }
                 }
             }

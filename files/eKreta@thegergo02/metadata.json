@@ -4,5 +4,5 @@
     "description": "Displays your grades from the eKreta API.",
     "prevent-decorations": true,
     "max-instances": 2,
-    "version": 0.01
+    "version": 0.30
 }

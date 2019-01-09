@@ -39,6 +39,9 @@
 
 ## Changelog
 
+### v0.3.0(Not released yet)
+* You can turn on to show just days you have lessons.
+
 ### v0.1.2-alpha
 * Added absences.
 * Optimized http request. (For example, I added gZip)

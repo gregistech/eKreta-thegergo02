@@ -162,5 +162,12 @@
         "default" : false,
         "description" : "Show lessons",
         "tooltip" : "Show your lessons."
+    },
+
+    "show_filtered_days": {
+        "type" : "checkbox",
+        "default" : false,
+        "description" : "Filter days",
+        "tooltip" : "Show just days you have lessons."
     }
 }
