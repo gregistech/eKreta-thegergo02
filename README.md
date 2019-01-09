@@ -40,7 +40,7 @@
 ## Changelog
 
 ### v0.3.0(Not released yet)
-* You can turn on to show just days you have lessons.
+* You can turn on to show just days you have lessons (in the timetable).
 
 ### v0.2.5-alpha
 * Added timetable.
