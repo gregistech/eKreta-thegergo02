@@ -397,7 +397,7 @@ EKretaDesklet.prototype = {
             this.panelText.set_text("Lessons");
             this.window.add(this.panelText);
 
-            var lastRun = 0;
+            var lastRun = -1;
             for (let j = 0;j <= 6;j++) {
                 this.curIterationDay = j;
                 this.isCurrentDay(j + 1,function(result, upperThis) {
@@ -420,11 +420,11 @@ EKretaDesklet.prototype = {
                         
                         var lessonText = new St.Label({ style_class: "medicalAbsence" })
                         lessonText.set_text(lessonDetails[i]["Count"] + " : " + lessonDetails[i]["Subject"] + " : " + lessonDetails[i]["StartTime"]);
-                        this.window.add(lessonText);
                         if (lastRun !== j) {
                             this.window.add(this.dayText);
                             lastRun = j;
                         }
+                        this.window.add(lessonText);
                     }
                 }
             }
