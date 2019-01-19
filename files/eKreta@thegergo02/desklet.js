@@ -412,14 +412,16 @@ EKretaDesklet.prototype = {
                 if (!this.showFilteredDays) {
                     this.window.add(this.dayText);
                 }
+                this.alreadyIn = new Array();
                 for (let i = 0; i < lessonDetails.length; i++) {
                     var startDate = new Date(lessonDetails[i]["Date"]);
-                    if (startDate < new Date(lessonDetails["EndDate"]) && startDate.getDay() === j + 1) {
+
+                    if (startDate < new Date(lessonDetails["EndDate"]) && startDate.getDay() === j + 1 && this.alreadyIn.indexOf(lessonDetails[i]["LessonId"]) === -1) {
                         var n = lessonDetails[i]["StartTime"].lastIndexOf('T');
+                        lessonDetails[i]["StartTimeHour"] = lessonDetails[i]["StartTime"].substring(n+1);
                         lessonDetails[i]["StartTime"] = lessonDetails[i]["StartTime"].substring(0,n);
-                        
                         var lessonText = new St.Label({ style_class: "medicalAbsence" })
-                        lessonText.set_text(lessonDetails[i]["Count"] + " : " + lessonDetails[i]["Subject"] + " : " + lessonDetails[i]["StartTime"]);
+                        lessonText.set_text(lessonDetails[i]["Count"] + " : " + lessonDetails[i]["Subject"] + " : " + lessonDetails[i]["StartTimeHour"]);
                         if (lastRun !== j) {
                             this.window.add(this.dayText);
                             lastRun = j;
@@ -620,7 +622,9 @@ EKretaDesklet.prototype = {
         StartDate.setHours(0,0,0,0); EndDate.setHours(0,0,0,0);
         StartDate.setDate(today.getDate()-day);
         EndDate.setDate(today.getDate()-day+6);
+        EndDate.setDate(EndDate.getDate()-5);
         callbackF(StartDate,EndDate,upperThis);
+        global.log(StartDate + " : " + EndDate);
     },
 
     //Loading screen shower function
