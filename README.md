@@ -39,8 +39,9 @@
 
 ## Changelog
 
-### v0.3.0(Not released yet)
+### v0.3.0
 * You can turn on to show just days you have lessons (in the timetable).
+* Changed some visual element in the timetable. (TODO: New screenshots!)
 
 ### v0.2.5-alpha
 * Added timetable.

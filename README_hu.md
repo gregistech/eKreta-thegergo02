@@ -40,6 +40,12 @@
 
 ## Changelog
 
+
+### v0.3.0
+* Beállítható hogy az órarenden csak azokat a napokat lásd amelyiken van órád!
+* Pár grafikai elem megváltoztatása. (TODO: New screenshots!)
+
+
 ### v0.2.5-alpha
 * Órarend hozzáadva.
 * Sok duplikált kód eltüntetve.
