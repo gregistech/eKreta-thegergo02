@@ -418,10 +418,12 @@ EKretaDesklet.prototype = {
 
                     if (startDate < new Date(lessonDetails["EndDate"]) && startDate.getDay() === j + 1 && this.alreadyIn.indexOf(lessonDetails[i]["LessonId"]) === -1) {
                         var n = lessonDetails[i]["StartTime"].lastIndexOf('T');
+                        var nE = lessonDetails[i]["EndTime"].lastIndexOf('T');
                         lessonDetails[i]["StartTimeHour"] = lessonDetails[i]["StartTime"].substring(n+1);
+                        lessonDetails[i]["EndTimeHour"] = lessonDetails[i]["EndTime"].substring(nE+1);
                         lessonDetails[i]["StartTime"] = lessonDetails[i]["StartTime"].substring(0,n);
                         var lessonText = new St.Label({ style_class: "medicalAbsence" })
-                        lessonText.set_text(lessonDetails[i]["Count"] + " : " + lessonDetails[i]["Subject"] + " : " + lessonDetails[i]["StartTimeHour"]);
+                        lessonText.set_text(lessonDetails[i]["Count"] + " : " + lessonDetails[i]["Subject"] + " : " + lessonDetails[i]["StartTimeHour"] + " - " + lessonDetails[i]["EndTimeHour"]);
                         if (lastRun !== j) {
                             this.window.add(this.dayText);
                             lastRun = j;
